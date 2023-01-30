@@ -18,7 +18,7 @@ Componentes utilizados no Commerce, não incluídos e precisam de licença:
 - [Projeto ACBr] - https://svn.code.sf.net/p/acbr/code/trunk2
 - [Nuvem Fiscal] - https://github.com/nuvem-fiscal/nuvemfiscal-sdk-delphi
 
-## Installation
+## Instalação
 
 Para executar uma Release do Commerce, basta baixar o executável e executá-lo, ele se copia para a pasta padrão:
 C:\Moebios
