@@ -16,6 +16,7 @@ Componentes utilizados no Commerce, não incluídos e precisam de licença:
 - [Unidac 9.2.1] - https://www.devart.com/unidac/
 - [Fortes Reporte CE] - https://github.com/fortesinformatica/fortesreport-ce.git/
 - [Projeto ACBr] - https://svn.code.sf.net/p/acbr/code/trunk2
+- [Nuvem Fiscal] - https://github.com/nuvem-fiscal/nuvemfiscal-sdk-delphi
 
 ## Installation
 
