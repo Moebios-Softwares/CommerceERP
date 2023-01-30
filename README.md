@@ -29,7 +29,7 @@ Cria um database padrão chamado "moebios"
 
 ## Manutenção do banco de dados
 
-Para adicionar um novo campo ao banco de dados, basta criar um field na query desejada em design time:
+Para adicionar um novo campo ao banco de dados, basta criar um field tipo "data" na query desejada em design time:
 
 ![image](https://user-images.githubusercontent.com/19708484/215529039-314e47dc-dc9c-4bde-90ab-b3fc625b1c6b.png)
 
