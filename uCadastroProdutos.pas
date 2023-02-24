@@ -6,28 +6,28 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, dxBar, dxRibbon, dxRibbonForm, dxRibbonSkins, cxGraphics, cxControls,
   cxLookAndFeels, cxLookAndFeelPainters, cxClasses, dxRibbonBackstageView,
-  cxBarEditItem, dxSkinsCore, dxRibbonCustomizationForm, cxTextEdit,
-  dxSkinsForm, dxStatusBar, dxRibbonStatusBar, dxLayoutContainer,
-  dxLayoutControl, Data.DB, MemDS, DBAccess, Uni, cxContainer, cxEdit,
-  dxLayoutcxEditAdapters, cxMaskEdit, cxDropDownEdit, cxCalendar, cxDBEdit,
-  dxLayoutLookAndFeels, cxCurrencyEdit, dxLayoutControlAdapters, Vcl.Menus,
-  Vcl.StdCtrls, cxButtons, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox,
-  dxSkinBasic, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkroom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMetropolis, dxSkinMetropolisDark, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinOffice2013DarkGray,
-  dxSkinOffice2013LightGray, dxSkinOffice2013White, dxSkinOffice2016Colorful,
-  dxSkinOffice2016Dark, dxSkinOffice2019Black, dxSkinOffice2019Colorful,
-  dxSkinOffice2019DarkGray, dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringtime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinTheBezier, dxSkinValentine, dxSkinVisualStudio2013Blue,
-  dxSkinVisualStudio2013Dark, dxSkinVisualStudio2013Light, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxCore;
+  cxBarEditItem, dxSkinsCore, dxRibbonCustomizationForm, cxTextEdit, dxSkinsForm,
+  dxStatusBar, dxRibbonStatusBar, dxLayoutContainer, dxLayoutControl, Data.DB,
+  MemDS, DBAccess, Uni, cxContainer, cxEdit, dxLayoutcxEditAdapters, cxMaskEdit,
+  cxDropDownEdit, cxCalendar, cxDBEdit, dxLayoutLookAndFeels, cxCurrencyEdit,
+  dxLayoutControlAdapters, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLookupEdit,
+  cxDBLookupEdit, cxDBLookupComboBox, dxSkinBasic, dxSkinBlack, dxSkinBlue,
+  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkroom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMetropolis,
+  dxSkinMetropolisDark, dxSkinMoneyTwins, dxSkinOffice2007Black,
+  dxSkinOffice2007Blue, dxSkinOffice2007Green, dxSkinOffice2007Pink,
+  dxSkinOffice2007Silver, dxSkinOffice2010Black, dxSkinOffice2010Blue,
+  dxSkinOffice2010Silver, dxSkinOffice2013DarkGray, dxSkinOffice2013LightGray,
+  dxSkinOffice2013White, dxSkinOffice2016Colorful, dxSkinOffice2016Dark,
+  dxSkinOffice2019Black, dxSkinOffice2019Colorful, dxSkinOffice2019DarkGray,
+  dxSkinOffice2019White, dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic,
+  dxSkinSharp, dxSkinSharpPlus, dxSkinSilver, dxSkinSpringtime, dxSkinStardust,
+  dxSkinSummer2008, dxSkinTheAsphaltWorld, dxSkinTheBezier, dxSkinValentine,
+  dxSkinVisualStudio2013Blue, dxSkinVisualStudio2013Dark,
+  dxSkinVisualStudio2013Light, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxCore;
 
 type
   TfrmCadastroProdutos = class(TdxRibbonForm)
@@ -424,6 +424,12 @@ end;
 
 procedure TfrmCadastroProdutos.FormShow(Sender: TObject);
 begin
+  DM.AtualizaTabela('commerce', 'ncm', qryNCM);
+  DM.AtualizaTabela('commerce', 'cst', qryCST);
+  DM.AtualizaTabela('commerce', 'csosn', qryCSOSN);
+  DM.AtualizaTabela('commerce', 'cfop', qryCFOP);
+  DM.AtualizaTabela('commerce', 'unidade', qryUnidades);
+
   edtCodigo.SetFocus();
   edtProduto.SetFocus();
   qryCFOP.Open();

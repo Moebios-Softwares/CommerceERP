@@ -692,7 +692,7 @@ end;
 
 procedure TfrmPrincipal.cxButton1Click(Sender: TObject);
 begin
-  ShellExecute(Handle, 'open', 'https://moebios.com.br/contrato', nil, nil, SW_SHOWMAXIMIZED);
+  ShellExecute(Handle, 'open', 'https://github.com/Moebios-Softwares/CommerceERP/blob/main/README.md', nil, nil, SW_SHOWMAXIMIZED);
 end;
 
 procedure TfrmPrincipal.dxRibbon1ApplicationMenuClick(Sender: TdxCustomRibbon; var AHandled: Boolean);
@@ -836,6 +836,7 @@ begin
   DM.qryEmpresa.Open();
   DM.qryAjustes.Open();
   IDMaquina := RetornaIDMaquina();
+  DM.SeedDB();
 
   Licenciado := True;
 

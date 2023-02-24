@@ -8,7 +8,9 @@ uses
   System.JSON, ACBrMail, StrUtils, ACBrDFeReport, ACBrDFeDANFeReport,
   ACBrNFeDANFEClass, ACBrNFeDANFeRLClass, ACBrBase, ACBrDFe, ACBrNFe, Registry,
   cxImage, DASQLMonitor, UniSQLMonitor, ACBrDANFCeFortesFr, Vcl.Dialogs,
-  NuvemFiscalClient, NuvemFiscalDTOs, OpenApiRest;
+  NuvemFiscalClient, NuvemFiscalDTOs, OpenApiRest, IdIOHandler, IdIOHandlerStack,
+  IdSSL, IdSSLOpenSSL, IdIOHandlerSocket, System.Threading, System.IniFiles,
+  IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP, IdURI;
 
 type
   TRegistro = (tlLicenciado, tlTrial, tlBloqueado);
@@ -1293,6 +1295,9 @@ type
     qryVerificaSchema: TUniQuery;
     qryAjustesnuvemfiscal_clientid: TStringField;
     qryAjustesnuvemfiscal_secretid: TStringField;
+    tblCSOSN: TUniTable;
+    tblCSOSNcod: TIntegerField;
+    tblCSOSNdescricao: TStringField;
     procedure ConexaoError(Sender: TObject; E: EDAError; var Fail: Boolean);
   private
     { Private declarations }
@@ -1305,10 +1310,11 @@ type
     function RetornaBancos(Con: TUniConnection): TStrings;
     function RetornaCMun(XNome: string): integer;
     function VerificaBancoDeDados: Boolean;
+    procedure BaixaSeed(link, arquivo: string);
     procedure AtualizaTabela(schema, tabela: string; qryAtualiza: TUniQuery); overload;
     procedure AtualizaTabela(schema, tabela: string; tblAtualiza: TUniTable); overload;
     procedure CopiaDataSet(Origem, Destino: TDataSet);
-    procedure EnviaSMS(De, Para, Mensagem: string);
+    procedure SeedDB();
   end;
 
 var
@@ -1452,18 +1458,6 @@ begin
   end;
 end;
 
-procedure TDM.EnviaSMS(De, Para, Mensagem: string);
-var
-  Consulta: TACBrHTTP;
-  URL, Retorno: string;
-  Company: TJSONObject;
-begin
-  Consulta := TACBrHTTP.Create(Self);
-  URL := 'https://api.mobizon.com.br/service/message/sendSmsMessage?output=json&api=v1&apiKey=br0e8fb88969a8b01b38e550d7cb4e43972eccd962b43549575ba8eda19598e464bf09&recipient=' + Para + '&text=' + Mensagem;
-  Consulta.HTTPMethod('GET', URL);
-  Retorno := Consulta.RespHTTP.Text;
-end;
-
 function TDM.GeraCodigoDisponivel(Tabela: string): string;
 var
   Query: TUniQuery;
@@ -1539,6 +1533,58 @@ begin
   qryCMun.Open();
 
   Result := qryCMuncodigo.Value;
+end;
+
+procedure TDM.SeedDB;
+begin
+  TThread.CreateAnonymousThread(
+    procedure()
+    var
+      Lista: TIniFile;
+      ListaValores: TStringList;
+      i: integer;
+    begin
+      BaixaSeed('https://dl.moebios.com.br/tabelapadrao.txt', 'tabelapadrao.txt');
+      Lista := TIniFile.Create('C:\Moebios\Tools\tabelapadrao.txt');
+      ListaValores := TStringList.Create();
+
+      tblCSOSN.Open();
+
+      if Lista.SectionExists('CSOSN') then
+      begin
+        Lista.ReadSectionValues('CSOSN', ListaValores);
+
+        for i := 0 to ListaValores.Count - 1 do
+        begin
+          tblCSOSN.Open();
+
+          if tblCSOSN.Locate('cod', ListaValores.Names[i], []) then
+          begin
+            tblCSOSN.Edit();
+            tblCSOSNcod.Value := StrToInt(ListaValores.Names[i]);
+            tblCSOSNdescricao.Value := ListaValores.Values[ListaValores.Names[i]];
+            tblCSOSN.Post();
+          end
+          else
+          begin
+            tblCSOSN.Append();
+            tblCSOSNcod.Value := StrToInt(ListaValores.Names[i]);
+            tblCSOSNdescricao.Value := ListaValores.Values[ListaValores.Names[i]];
+            tblCSOSN.Post();
+          end;
+        end;
+      end;
+
+      tblCSOSN.Close();
+
+      TThread.Synchronize(TThread.CurrentThread,
+        procedure()
+        begin
+          FreeAndNil(Lista);
+          FreeAndNil(ListaValores);
+        end);
+
+    end).Start();
 end;
 
 function TDM.StrZero(Codigo: string; Casas: integer): string;
@@ -1632,6 +1678,29 @@ begin
     end;
 
     qryCriaTabela.Execute;
+  end;
+end;
+
+procedure TDM.BaixaSeed(link, arquivo: string);
+var
+  idHTTP: TIdHTTP;
+  IdSSL: TIdSSLIOHandlerSocketOpenSSL;
+  Stream: TMemoryStream;
+  Filename: string;
+begin
+  ForceDirectories('C:\Moebios\Tools\');
+  idHTTP := TIdHTTP.Create(nil);
+  IdSSL := TIdSSLIOHandlerSocketOpenSSL.Create(idHTTP);
+  IdSSL.SSLOptions.SSLVersions := [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2];
+  idHTTP.IOHandler := IdSSL;
+  idHTTP.HandleRedirects := True;
+  Stream := TMemoryStream.Create;
+  try
+    idHTTP.Get(link, Stream);
+    Stream.SaveToFile('C:\Moebios\Tools\' + arquivo);
+  finally
+    Stream.Free;
+    idHTTP.Free;
   end;
 end;
 

@@ -267,6 +267,8 @@ uses
 
 procedure TfrmProdutos.dxBarLargeButton1Click(Sender: TObject);
 begin
+  DM.AtualizaTabela('commerce', 'produtos', frmCadastroProdutos.tblProdutos);
+
   frmCadastroProdutos.Novo := True;
   frmCadastroProdutos.tblProdutos.Close();
   frmCadastroProdutos.tblProdutos.Open();

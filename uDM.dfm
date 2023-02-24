@@ -4717,4 +4717,17 @@ object DM: TDM
         Value = nil
       end>
   end
+  object tblCSOSN: TUniTable
+    TableName = 'commerce.csosn'
+    Connection = Conexao
+    Left = 176
+    Top = 120
+    object tblCSOSNcod: TIntegerField
+      FieldName = 'cod'
+    end
+    object tblCSOSNdescricao: TStringField
+      FieldName = 'descricao'
+      Size = 200
+    end
+  end
 end
